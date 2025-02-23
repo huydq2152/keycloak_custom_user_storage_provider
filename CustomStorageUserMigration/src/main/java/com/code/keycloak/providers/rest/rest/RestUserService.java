@@ -5,6 +5,7 @@ import com.code.keycloak.providers.rest.remote.LegacyUserService;
 import com.code.keycloak.providers.rest.rest.http.HttpClient;
 import com.code.keycloak.providers.rest.rest.models.AuthenticatedResult;
 import com.code.keycloak.providers.rest.rest.models.LoginRequest;
+import com.code.keycloak.providers.rest.rest.models.UserPasswordDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpStatus;
 import org.keycloak.common.util.Encode;

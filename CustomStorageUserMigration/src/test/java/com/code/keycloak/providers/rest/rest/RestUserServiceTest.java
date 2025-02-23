@@ -4,7 +4,7 @@ import com.code.keycloak.providers.rest.remote.LegacyTotp;
 import com.code.keycloak.providers.rest.remote.LegacyUser;
 import com.code.keycloak.providers.rest.rest.http.HttpClient;
 import com.code.keycloak.providers.rest.rest.http.HttpResponse;
-import com.fasterxml.jackson.core.JsonParseException;
+import com.code.keycloak.providers.rest.rest.models.UserPasswordDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpStatus;
