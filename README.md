@@ -88,6 +88,35 @@ This section provides a concise guide to setting up a local Keycloak instance an
 - [YouTube: Keycloak MSSQL Configuration](https://www.youtube.com/watch?v=QeTLzVEchk4)
 - [Stack Overflow: JDBC Connection Failed Error](https://stackoverflow.com/questions/18841744/jdbc-connection-failed-error-tcp-ip-connection-to-host-failed)
 
+### Debug Custom User Provider Project When Interacting with Local Keycloak
+
+1. **Build JAR File:** Use Gradle to build the JAR file and move it to the Keycloak installation directory as described above.
+
+2. **Restart & Rebuild Keycloak:**
+
+- **Windows:**
+  ```bash
+  cd <keycloak_installation_dir>\bin
+  kc.bat build --debug=<remote_debugging_port>
+  kc.bat start-dev
+  ```
+
+Replace `<keycloak_installation_dir>` with the actual path. `start-dev` is for development; use `start` for production (requires more configuration).
+
+3. **Configure Remote Debug in IntelliJ IDEA:**
+
+- Open the project with IntelliJ IDEA.
+- Navigate to `Run` -> `Edit Configurations` -> Create a new `Remote JVM Debug` configuration.
+- Configure the Remote JVM Debug:
+  - **Name:** `<name_you_want_to_define_config>` (e.g., Keycloak Remote Debug)
+  - **Debugger Mode:** Attach to remote JVM
+  - **Transport:** Socket
+  - **Host:** `localhost` (or the IP of the Keycloak server)
+  - **Port:** `<remote_debugging_port>`
+- Run the configuration in debug mode.
+
+**Note:** Ensure you have added this provider to the realm.
+
 ### Reference Documentation
 
 For further reference, please consider the following sections:
