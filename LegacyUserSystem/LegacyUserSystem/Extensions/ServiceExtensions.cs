@@ -5,6 +5,8 @@ using LegacyUserSystem.Persistence;
 using LegacyUserSystem.Persistence.Seed;
 using LegacyUserSystem.Services;
 using LegacyUserSystem.Services.Interfaces;
+using LegacyUserSystem.Services.Interfaces.User;
+using LegacyUserSystem.Services.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +20,8 @@ public static class ServiceExtensions
     {
         services
             .AddScoped<ApplicationContextSeed>()
-            .AddScoped<ITokenService, TokenService>();
+            .AddScoped<ITokenService, TokenService>()
+            .AddTransient<IUserService, UserService>();
     }
     
     public static void AddDbContext(this IServiceCollection services, IConfiguration configuration)

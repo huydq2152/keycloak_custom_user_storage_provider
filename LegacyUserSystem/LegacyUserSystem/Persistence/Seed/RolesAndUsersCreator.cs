@@ -9,10 +9,10 @@ public class RolesAndUsersCreator(ApplicationDbContext dbContext)
 {
     public async Task Create()
     {
-        await CreateRolesAndUsers();
+        await CreateAdminUser();
     }
 
-    private async Task CreateRolesAndUsers()
+    private async Task CreateAdminUser()
     {
         // Admin role 
         var adminRole = await dbContext.Roles.IgnoreQueryFilters().FirstOrDefaultAsync(o => o.Name == Roles.AdminRoleName);
@@ -41,6 +41,7 @@ public class RolesAndUsersCreator(ApplicationDbContext dbContext)
                 UserName = Users.AdminUserName,
                 NormalizedUserName = Users.NormalizedAdminUserName,
                 IsActive = true,
+                EmailConfirmed = true,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 LockoutEnabled = false
             };

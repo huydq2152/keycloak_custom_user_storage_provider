@@ -97,8 +97,8 @@ This section provides a concise guide to setting up a local Keycloak instance an
 - **Windows:**
   ```bash
   cd <keycloak_installation_dir>\bin
-  kc.bat build --debug=<remote_debugging_port>
-  kc.bat start-dev
+  kc.bat build 
+  kc.bat start-dev --debug=<remote_debugging_port>
   ```
 
 Replace `<keycloak_installation_dir>` with the actual path. `start-dev` is for development; use `start` for production (requires more configuration).

@@ -3,8 +3,6 @@ package com.code.keycloak.providers.rest.rest;
 import com.code.keycloak.providers.rest.remote.LegacyUser;
 import com.code.keycloak.providers.rest.remote.LegacyUserService;
 import com.code.keycloak.providers.rest.rest.http.HttpClient;
-import com.code.keycloak.providers.rest.rest.models.AuthenticatedResult;
-import com.code.keycloak.providers.rest.rest.models.LoginRequest;
 import com.code.keycloak.providers.rest.rest.models.UserPasswordDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpStatus;
@@ -59,7 +57,7 @@ public class RestUserService implements LegacyUserService {
     }
 
     private boolean equalsCaseInsensitive(String a, String b) {
-        if(a == null || b == null) {
+        if (a == null || b == null) {
             return false;
         }
 
@@ -76,7 +74,7 @@ public class RestUserService implements LegacyUserService {
         if (usernameOrEmail != null) {
             usernameOrEmail = Encode.urlEncode(usernameOrEmail);
         }
-        var getUsernameUri = String.format("%s/%s", this.uri, usernameOrEmail);
+        var getUsernameUri = String.format("%s/api/user/%s", this.uri, usernameOrEmail);
         try {
             var response = this.httpClient.get(getUsernameUri);
             if (response.getCode() != HttpStatus.SC_OK) {
@@ -84,7 +82,7 @@ public class RestUserService implements LegacyUserService {
             }
             var legacyUser = objectMapper.readValue(response.getBody(), LegacyUser.class);
             return Optional.ofNullable(legacyUser);
-        } catch (RuntimeException|IOException e) {
+        } catch (RuntimeException | IOException e) {
             Log.errorf("Got a RuntimeException or IOException: when looking up user %s", usernameOrEmail);
             Log.errorf("Exception message: %s", e.getMessage());
             return Optional.empty();
@@ -96,7 +94,7 @@ public class RestUserService implements LegacyUserService {
         if (username != null) {
             username = Encode.urlEncode(username);
         }
-        var passwordValidationUri = String.format("%s/%s", this.uri, username);
+        var passwordValidationUri = String.format("%s/api/auth/validatepassword/%s", this.uri, username);
         var dto = new UserPasswordDto(password);
         try {
             var json = objectMapper.writeValueAsString(dto);
@@ -109,29 +107,4 @@ public class RestUserService implements LegacyUserService {
         }
     }
 
-    @Override
-    public boolean checkLogin(String username, String password) {
-        if (username != null) {
-            username = Encode.urlEncode(username);
-        }
-
-        var loginUri = String.format("%s/%s", this.uri, "api/Auth/Login");
-        var loginRequest = new LoginRequest(username, password);
-
-        try {
-            var json = objectMapper.writeValueAsString(loginRequest);
-            var response = httpClient.post(loginUri, json);
-
-            if (response.getCode() == HttpStatus.SC_OK) {
-                var authResult = objectMapper.readValue(response.getBody(), AuthenticatedResult.class);
-                return authResult != null && authResult.getToken() != null;
-            }
-
-            return false;
-        } catch (IOException e) {
-            Log.errorf("Got an IOException: when validating password for user %s", username);
-            Log.errorf("Exception message: %s", e.getMessage());
-            return false;
-        }
-    }
 }

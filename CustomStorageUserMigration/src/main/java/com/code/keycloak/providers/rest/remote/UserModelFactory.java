@@ -105,9 +105,9 @@ public class UserModelFactory {
 
     private void migrateBasicAttributes(LegacyUser legacyUser, UserModel userModel) {
         userModel.setFederationLink(model.getId());
-        userModel.setEnabled(legacyUser.isEnabled());
+        userModel.setEnabled(legacyUser.enabled());
         userModel.setEmail(legacyUser.email());
-        userModel.setEmailVerified(legacyUser.isEmailVerified());
+        userModel.setEmailVerified(legacyUser.emailVerified());
         userModel.setFirstName(legacyUser.firstName());
         userModel.setLastName(legacyUser.lastName());
     }

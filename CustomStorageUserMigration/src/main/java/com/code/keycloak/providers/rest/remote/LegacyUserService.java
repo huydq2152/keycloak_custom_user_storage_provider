@@ -32,13 +32,4 @@ public interface LegacyUserService {
      */
     boolean isPasswordValid(String username, String password);
 
-    /**
-     * Login user with given username and password.
-     *
-     * @param username username to login.
-     * @param password the password to login.
-     * @return true if login is successful.
-     */
-    boolean checkLogin(String username, String password);
-
 }

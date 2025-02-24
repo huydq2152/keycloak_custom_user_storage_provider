@@ -15,7 +15,7 @@ public class AuthController(
     ITokenService tokenService)
     : ApiControllerBase
 {
-    [HttpPost]
+    [HttpPost("login")]
     public async Task<ActionResult<AuthenticatedResult>> Login([FromBody] LoginRequest request)
     {
         //Authentication
@@ -61,5 +61,23 @@ public class AuthController(
             Token = accessToken,
             RefreshToken = refreshToken
         });
+    }
+
+    [HttpPost("validatePassword/{username}")]
+    public async Task<ActionResult> ValidatePassword(string username, [FromBody] PasswordValidationRequest request)
+    {
+        if (string.IsNullOrEmpty(username) || request == null)
+        {
+            return BadRequest("Invalid request");
+        }
+
+        var user = await userManager.FindByNameAsync(username);
+        if (user == null)
+        {
+            return BadRequest("User not found");
+        }
+
+        var result = await signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+        return result.Succeeded ? Ok() : BadRequest();
     }
 }

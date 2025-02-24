@@ -60,11 +60,7 @@ public class LegacyProvider implements UserStorageProvider,
 
         var userIdentifier = getUserIdentifier(userModel);
 
-//        if (!legacyUserService.isPasswordValid(userIdentifier, input.getChallengeResponse())) {
-//            return false;
-//        }
-
-        if (!legacyUserService.checkLogin(userModel.getUsername(), input.getChallengeResponse())) {
+        if (!legacyUserService.isPasswordValid(userIdentifier, input.getChallengeResponse())) {
             return false;
         }
 
@@ -156,20 +152,20 @@ public class LegacyProvider implements UserStorageProvider,
     }
 
     private UserModel getUserModel(RealmModel realm, String username, Supplier<Optional<LegacyUser>> user) {
-        return user.get()
-                .filter(u -> {
-                    // Make sure we're not trying to migrate users if they have changed their username
-                    boolean duplicate = userModelFactory.isDuplicateUserId(u, realm);
-                    if (duplicate) {
-                        LOG.warnf("User with the same user id already exists: %s", u.id());
-                    }
-                    return !duplicate;
-                })
-                .map(u -> userModelFactory.create(u, realm))
-                .orElseGet(() -> {
-                    LOG.warnf("User not found in external repository: %s", username);
-                    return null;
-                });
+        Optional<LegacyUser> legacyUserOpt = user.get();
+        if (legacyUserOpt.isEmpty()) {
+            LOG.warnf("User not found in external repository: %s", username);
+            return null;
+        }
+
+        LegacyUser legacyUser = legacyUserOpt.get();
+        boolean duplicate = userModelFactory.isDuplicateUserId(legacyUser, realm);
+        if (duplicate) {
+            LOG.warnf("User with the same user id already exists: %s", legacyUser.id());
+            return null;
+        }
+
+        return userModelFactory.create(legacyUser, realm);
     }
 
     @Override
